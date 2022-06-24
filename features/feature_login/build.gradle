@@ -6,6 +6,9 @@ android {
     defaultConfig {
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
+    testOptions {
+        animationsDisabled = true
+    }
     dataBinding {
         enabled true
     }
