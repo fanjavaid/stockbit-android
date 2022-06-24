@@ -12,6 +12,9 @@ import com.stockbit.common.base.BaseFragment
 import com.stockbit.common.base.BaseViewModel
 import com.stockbit.hiring.feature_login.R
 import com.stockbit.hiring.feature_login.databinding.FragmentLoginBinding
+import com.stockbit.local.datasource.UserLocalDataSource
+import com.stockbit.model.User
+import com.stockbit.repository.InMemoryUserRepository
 
 class LoginFragment : BaseFragment() {
 
@@ -20,7 +23,14 @@ class LoginFragment : BaseFragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        viewModel = ViewModelProvider(this)[LoginViewModel::class.java]
+
+        val userDataSource = UserLocalDataSource()
+        val userRepo = InMemoryUserRepository(userDataSource)
+
+        viewModel = ViewModelProvider(
+            this,
+            LoginViewModel.Factory(userRepo)
+        )[LoginViewModel::class.java]
         setHasOptionsMenu(true)
     }
 
@@ -52,10 +62,22 @@ class LoginFragment : BaseFragment() {
                     } else R.drawable.ic_visibility
                 )
             }
+            loginButton.setOnClickListener {
+                viewModel.login(
+                    User(
+                        emailAddress = usernameEmailEditText.text.toString(),
+                        password = passwordEditText.text.toString()
+                    )
+                )
+            }
         }
     }
 
     private fun observeViewModel() {
+//        viewModel.snackBarError.observe(viewLifecycleOwner) {
+//            val message = it?.peekContent() ?: R.string.invalid_username_or_password
+//
+//        }
     }
 
     private fun TransformationMethod.isPasswordVisible(): Boolean {
