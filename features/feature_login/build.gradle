@@ -1,0 +1,27 @@
+apply plugin: 'com.android.library'
+apply from: '../../android_commons.gradle'
+apply plugin: "androidx.navigation.safeargs.kotlin"
+
+android {
+    defaultConfig {
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+    }
+    dataBinding {
+        enabled true
+    }
+}
+
+dependencies {
+    // COMMON
+    implementation project(Modules.common)
+    // ANDROID
+    implementation AndroidLibraries.appCompat
+    implementation AndroidLibraries.constraintLayout
+    implementation AndroidLibraries.navigation
+    implementation AndroidLibraries.navigationFrag
+    // TEST
+    implementation TestLibraries.androidTestRunner
+    implementation TestLibraries.espresso
+    implementation TestLibraries.fragmentNav
+    implementation TestLibraries.junit
+}
