@@ -9,4 +9,5 @@ include ':data:remote',
         ':data:local',
         ':data:repository'
 
-include ':features:feature_login'
+include ':features:feature_login',
+        ':features:feature_home'
