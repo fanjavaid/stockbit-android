@@ -7,15 +7,16 @@ import android.view.View
 import android.view.View.GONE
 import android.view.View.VISIBLE
 import android.view.ViewGroup
-import androidx.core.content.ContextCompat
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.stockbit.common.base.BaseFragment
 import com.stockbit.common.base.BaseViewModel
+import com.stockbit.common.utils.ResourceUtils.getColor
 import com.stockbit.hiring.feature_home.R
 import com.stockbit.hiring.feature_home.databinding.FragmentHomeBinding
 import com.stockbit.hiring.feature_home.ui.adapters.Stock
@@ -35,6 +36,24 @@ class HomeFragment : BaseFragment(), SwipeRefreshLayout.OnRefreshListener {
 
     private val homeViewModel: HomeViewModel by viewModel()
 
+    private var isLoadMore = false
+    private var page = 0
+    private val endlessScrollListener = object : RecyclerView.OnScrollListener() {
+        override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+            super.onScrolled(recyclerView, dx, dy)
+            val linearLayoutManager = binding.stockList.layoutManager as? LinearLayoutManager
+            if (!isLoadMore) {
+                if (linearLayoutManager != null &&
+                    linearLayoutManager.findLastCompletelyVisibleItemPosition() ==
+                    stockAdapter.itemCount - 1
+                ) {
+                    loadMore()
+                    isLoadMore = true
+                }
+            }
+        }
+    }
+
     override fun getViewModel(): BaseViewModel = homeViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -45,13 +64,13 @@ class HomeFragment : BaseFragment(), SwipeRefreshLayout.OnRefreshListener {
     private fun collectCryptoCompares() {
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                getData()
+                getData(page = 0)
             }
         }
     }
 
-    private suspend fun getData() {
-        homeViewModel.getTotalTopTierVolume().collect {
+    private suspend fun getData(page: Int) {
+        homeViewModel.getTotalTopTierVolume(page).collect {
             when (it.status) {
                 LOADING -> if (!binding.swipeRefreshLayout.isRefreshing) {
                     renderLoading()
@@ -82,7 +101,7 @@ class HomeFragment : BaseFragment(), SwipeRefreshLayout.OnRefreshListener {
 
     override fun onRefresh() {
         viewLifecycleOwner.lifecycleScope.launch {
-            getData()
+            getData(page = 0)
         }
     }
 
@@ -90,21 +109,24 @@ class HomeFragment : BaseFragment(), SwipeRefreshLayout.OnRefreshListener {
         binding.stockList.apply {
             adapter = stockAdapter
             layoutManager = LinearLayoutManager(requireContext())
-            addItemDecoration(
-                DividerItemDecoration(requireContext(), DividerItemDecoration.VERTICAL).apply {
-                    setDrawable(
-                        ColorDrawable().apply {
-                            color =
-                                ContextCompat.getColor(requireContext(), R.color.colorLighterGray)
-                        }
-                    )
-                }
-            )
+            itemAnimator = null
+            addItemDecoration(createDivider())
+            addOnScrollListener(endlessScrollListener)
+        }
+    }
+
+    private fun loadMore() {
+        page++
+        stockAdapter.stocks.add(null)
+        binding.stockList.post {
+            stockAdapter.notifyItemInserted(stockAdapter.itemCount - 1)
+            viewLifecycleOwner.lifecycleScope.launch {
+                getData(page = page)
+            }
         }
     }
 
     private fun renderStocks(data: CryptoCompare?) {
-        binding.swipeRefreshLayout.isRefreshing = false
         binding.loading.visibility = GONE
         binding.emptyLayout.visibility = GONE
 
@@ -113,7 +135,14 @@ class HomeFragment : BaseFragment(), SwipeRefreshLayout.OnRefreshListener {
             return
         }
 
-        stockAdapter.stocks = data.Data.map {
+        // Remove load more loading item
+        if (stockAdapter.stocks.size > 0) {
+            stockAdapter.stocks.removeAt(stockAdapter.stocks.size - 1)
+            stockAdapter.notifyItemRemoved(stockAdapter.stocks.size)
+            isLoadMore = false
+        }
+
+        val items = data.Data.map {
             Stock(
                 id = it.CoinInfo.Id,
                 name = it.CoinInfo.Name.orEmpty(),
@@ -122,7 +151,18 @@ class HomeFragment : BaseFragment(), SwipeRefreshLayout.OnRefreshListener {
                 percentage = it.DISPLAY.USD?.CHANGEPCTHOUR.orEmpty()
             )
         }
-        stockAdapter.notifyDataSetChanged()
+
+        if (binding.swipeRefreshLayout.isRefreshing) {
+            binding.swipeRefreshLayout.isRefreshing = false
+            stockAdapter.stocks = items.toMutableList()
+        } else {
+            stockAdapter.stocks.addAll(items)
+        }
+
+        stockAdapter.notifyItemRangeChanged(
+            stockAdapter.itemCount,
+            (stockAdapter.itemCount + HomeViewModel.LIMIT)
+        )
     }
 
     private fun renderEmpty() {
@@ -147,6 +187,19 @@ class HomeFragment : BaseFragment(), SwipeRefreshLayout.OnRefreshListener {
     private fun renderLoading() {
         binding.emptyLayout.visibility = GONE
         binding.loading.visibility = VISIBLE
+    }
+
+    private fun createDivider(): RecyclerView.ItemDecoration {
+        return DividerItemDecoration(
+            requireContext(),
+            DividerItemDecoration.VERTICAL
+        ).apply {
+            setDrawable(
+                ColorDrawable().apply {
+                    color = getColor(requireContext(), R.color.colorLighterGray)
+                }
+            )
+        }
     }
 
     companion object {

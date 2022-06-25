@@ -5,7 +5,7 @@ import retrofit2.Response
 
 class CryptoCompareDataSource(private val service: CryptoCompareService) {
 
-    suspend fun fetchTotalTopTierVolume(limit: Int, currencySymbol: String): Response<CryptoCompare> {
-        return service.fetchTotalTopTierVolume(limit, currencySymbol)
+    suspend fun fetchTotalTopTierVolume(limit: Int, page: Int, currencySymbol: String): Response<CryptoCompare> {
+        return service.fetchTotalTopTierVolume(limit, page, currencySymbol)
     }
 }

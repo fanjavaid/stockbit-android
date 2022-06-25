@@ -8,8 +8,8 @@ import kotlinx.coroutines.flow.Flow
 
 class HomeViewModel(private val repository: CryptoCompareRepository) : BaseViewModel() {
 
-    fun getTotalTopTierVolume(): Flow<Resource<CryptoCompare>> {
-        return repository.fetchTotalTopTierVolume(LIMIT, CURRENCY)
+    fun getTotalTopTierVolume(page: Int): Flow<Resource<CryptoCompare>> {
+        return repository.fetchTotalTopTierVolume(LIMIT, page, CURRENCY)
     }
 
     companion object {

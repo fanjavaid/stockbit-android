@@ -10,6 +10,7 @@ interface CryptoCompareService {
     @GET("data/top/totaltoptiervolfull")
     suspend fun fetchTotalTopTierVolume(
         @Query("limit") limit: Int,
+        @Query("page") page: Int,
         @Query("tsym") currencySymbol: String,
     ): Response<CryptoCompare>
 }
