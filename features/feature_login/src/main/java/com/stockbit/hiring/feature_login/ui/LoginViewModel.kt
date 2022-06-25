@@ -1,7 +1,7 @@
 package com.stockbit.hiring.feature_login.ui
 
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
+import android.os.Bundle
+import androidx.navigation.NavDirections
 import com.stockbit.common.base.BaseViewModel
 import com.stockbit.common.utils.Event
 import com.stockbit.hiring.feature_login.R
@@ -16,8 +16,14 @@ class LoginViewModel(private val userRepository: UserRepository) : BaseViewModel
             _snackbarError.value = Event(validateResult)
             return
         }
+        navigate(getHomeNavDirections())
+    }
 
-        // TODO: Go to homescreen
+    private fun getHomeNavDirections(): NavDirections = object : NavDirections {
+        override fun getActionId(): Int {
+            return R.id.action_loginFragment_to_homeFragment
+        }
+        override fun getArguments(): Bundle = Bundle()
     }
 
     private fun validate(user: User): Int? {
@@ -26,14 +32,5 @@ class LoginViewModel(private val userRepository: UserRepository) : BaseViewModel
             return errorMessage
         }
         return if (userRepository.login(user)) null else errorMessage
-    }
-
-    class Factory(private val userRepository: UserRepository) : ViewModelProvider.Factory {
-        override fun <T : ViewModel?> create(modelClass: Class<T>): T {
-            if (modelClass.isAssignableFrom(LoginViewModel::class.java)) {
-                return LoginViewModel(userRepository) as T
-            }
-            throw ClassCastException("Error cast ${modelClass.simpleName}")
-        }
     }
 }

@@ -7,34 +7,24 @@ import android.text.method.TransformationMethod
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.lifecycle.ViewModelProvider
 import com.stockbit.common.base.BaseFragment
 import com.stockbit.common.base.BaseViewModel
 import com.stockbit.hiring.feature_login.R
 import com.stockbit.hiring.feature_login.databinding.FragmentLoginBinding
-import com.stockbit.local.datasource.UserLocalDataSource
 import com.stockbit.model.User
-import com.stockbit.repository.InMemoryUserRepository
+import org.koin.android.viewmodel.ext.android.viewModel
 
 class LoginFragment : BaseFragment() {
 
     private lateinit var binding: FragmentLoginBinding
-    private lateinit var viewModel: LoginViewModel
+    private val loginViewModel: LoginViewModel by viewModel()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        val userDataSource = UserLocalDataSource()
-        val userRepo = InMemoryUserRepository(userDataSource)
-
-        viewModel = ViewModelProvider(
-            this,
-            LoginViewModel.Factory(userRepo)
-        )[LoginViewModel::class.java]
         setHasOptionsMenu(true)
     }
 
-    override fun getViewModel(): BaseViewModel = viewModel
+    override fun getViewModel(): BaseViewModel = loginViewModel
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -47,11 +37,8 @@ class LoginFragment : BaseFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding.toolbar.inflateMenu(R.menu.main_menu)
-
-        observeViewModel()
-
         binding.apply {
+            toolbar.inflateMenu(R.menu.main_menu)
             passwordVisibilityIcon.setOnClickListener {
                 val isPasswordVisible = passwordEditText.transformationMethod.isPasswordVisible()
                 passwordEditText.transformationMethod = getTransformationMethod(!isPasswordVisible)
@@ -63,7 +50,7 @@ class LoginFragment : BaseFragment() {
                 )
             }
             loginButton.setOnClickListener {
-                viewModel.login(
+                loginViewModel.login(
                     User(
                         emailAddress = usernameEmailEditText.text.toString(),
                         password = passwordEditText.text.toString()
@@ -71,13 +58,6 @@ class LoginFragment : BaseFragment() {
                 )
             }
         }
-    }
-
-    private fun observeViewModel() {
-//        viewModel.snackBarError.observe(viewLifecycleOwner) {
-//            val message = it?.peekContent() ?: R.string.invalid_username_or_password
-//
-//        }
     }
 
     private fun TransformationMethod.isPasswordVisible(): Boolean {

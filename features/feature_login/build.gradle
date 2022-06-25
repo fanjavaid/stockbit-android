@@ -19,6 +19,9 @@ dependencies {
     implementation project(Modules.model)
     implementation project(Modules.local)
     implementation project(Modules.repository)
+    // KOIN
+    implementation Libraries.koin
+    implementation Libraries.koinViewModel
     // COMMON
     implementation project(Modules.common)
     // ANDROID
