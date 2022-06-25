@@ -7,4 +7,8 @@
     <string name="search">Search</string>
     <string name="chat">Chat</string>
     <string name="portfolio">Portfolio</string>
+    <string name="error_title">Whoops!</string>
+    <string name="error_desc">Something went wrong! Please check your internet connection.</string>
+    <string name="empty_title">No Data</string>
+    <string name="empty_desc">No data to be displayed</string>
 </resources>

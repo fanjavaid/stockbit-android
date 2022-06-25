@@ -10,4 +10,11 @@
         android:name="com.stockbit.hiring.feature_login.ui.LoginFragment"
         android:label="Login Fragment"
         tools:layout="@layout/fragment_login" />
+
+
+    <fragment
+        android:id="@+id/homeFragment"
+        android:name="com.stockbit.hiring.feature_home.ui.HomeFragment"
+        android:label="Home Fragment"
+        tools:layout="@layout/fragment_home" />
 </navigation>

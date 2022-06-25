@@ -16,6 +16,7 @@ object Modules {
     val repository = ":data:repository"
 
     val featureLogin = ":features:feature_login"
+    val featureHome = ":features:feature_home"
 }
 
 object Releases {
@@ -43,7 +44,7 @@ object Versions {
     val coroutines = "1.4.3"
     val koin = "2.0.1"
     val timber = "4.7.1"
-    val lifecycle = "2.2.0"
+    val lifecycle = "2.4.1"
     val nav = "2.0.0"
     val room = "2.3.0"
     val recyclerview = "1.0.0"
@@ -85,6 +86,7 @@ object AndroidLibraries {
     val appCompat = "androidx.appcompat:appcompat:${Versions.appCompat}"
     val coreKtx = "androidx.core:core-ktx:${Versions.coreKtx}"
     val constraintLayout = "androidx.constraintlayout:constraintlayout:${Versions.constraintLayout}"
+    val lifecycleRuntime = "androidx.lifecycle:lifecycle-runtime-ktx:${Versions.lifecycle}"
     val lifecycleViewModel = "androidx.lifecycle:lifecycle-viewmodel-ktx:${Versions.lifecycle}"
     val lifecycleExtensions = "androidx.lifecycle:lifecycle-extensions:${Versions.lifecycle}"
     val recyclerView = "androidx.recyclerview:recyclerview:${Versions.recyclerview}"

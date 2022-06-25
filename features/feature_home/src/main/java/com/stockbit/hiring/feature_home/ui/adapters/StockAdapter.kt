@@ -1,25 +1,13 @@
-package com.stockbit.hiring.feature_home
+package com.stockbit.hiring.feature_home.ui.adapters
 
+import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.stockbit.common.utils.NumberUtils.formatThousand
+import com.stockbit.common.utils.ResourceUtils.getColor
+import com.stockbit.hiring.feature_home.R
 import com.stockbit.hiring.feature_home.databinding.ItemStockBinding
-
-data class Stock(
-    val id: Long,
-    val name: String,
-    val desc: String,
-    val price: Long,
-    val percentage: String,
-    val status: StockStatus = StockStatus.Available
-)
-
-sealed class StockStatus {
-    object Available : StockStatus()
-    object NotAvailable : StockStatus()
-}
 
 class StockAdapter : RecyclerView.Adapter<StockAdapter.ViewHolder>() {
 
@@ -40,12 +28,23 @@ class StockAdapter : RecyclerView.Adapter<StockAdapter.ViewHolder>() {
         private val binding: ItemStockBinding
     ) : RecyclerView.ViewHolder(binding.root) {
 
+        private val context: Context
+            get() = binding.root.context
+
         fun bind(stock: Stock) {
+            val stockPercentage = stock.percentage.ifBlank { "0.0" }.toDouble()
             binding.apply {
                 stockTitleText.text = stock.name
                 stockDescriptionText.text = stock.desc
-                stockPriceText.text = stock.price.formatThousand()
+                stockPriceText.text = stock.price
                 stockPercentageText.text = stock.percentage
+                stockPercentageText.setTextColor(
+                    when {
+                        stockPercentage < 0.0 -> getColor(context, R.color.colorDanger)
+                        stockPercentage == 0.0 -> getColor(context, R.color.colorLightGray)
+                        else -> getColor(context, R.color.colorAccent)
+                    }
+                )
                 stockStatusText.visibility = if (stock.status == StockStatus.Available) {
                     View.GONE
                 } else View.VISIBLE

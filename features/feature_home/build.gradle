@@ -22,11 +22,16 @@ dependencies {
     implementation project(Modules.repository)
     // COMMON
     implementation project(Modules.common)
+    // KOIN
+    implementation Libraries.koin
+    implementation Libraries.koinViewModel
     // ANDROID
     implementation AndroidLibraries.appCompat
     implementation AndroidLibraries.constraintLayout
     implementation AndroidLibraries.navigation
     implementation AndroidLibraries.navigationFrag
+    implementation AndroidLibraries.lifecycleRuntime
+    implementation AndroidLibraries.lifecycleViewModel
     // TEST
     implementation TestLibraries.androidTestRunner
     implementation TestLibraries.espresso
