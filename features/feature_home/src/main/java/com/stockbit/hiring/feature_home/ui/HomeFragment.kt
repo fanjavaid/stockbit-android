@@ -13,6 +13,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.stockbit.common.base.BaseFragment
 import com.stockbit.common.base.BaseViewModel
 import com.stockbit.hiring.feature_home.R
@@ -27,7 +28,7 @@ import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import org.koin.android.viewmodel.ext.android.viewModel
 
-class HomeFragment : BaseFragment() {
+class HomeFragment : BaseFragment(), SwipeRefreshLayout.OnRefreshListener {
 
     private lateinit var binding: FragmentHomeBinding
     private val stockAdapter: StockAdapter = StockAdapter()
@@ -44,33 +45,21 @@ class HomeFragment : BaseFragment() {
     private fun collectCryptoCompares() {
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                homeViewModel.getTotalTopTierVolume().collect {
-                    when (it.status) {
-                        LOADING -> renderLoading()
-                        SUCCESS -> renderStocks(it.data)
-                        ERROR -> renderError()
-                    }
-                }
+                getData()
             }
         }
     }
 
-    private fun renderEmpty() {
-        binding.apply {
-            emptyLayout.visibility = VISIBLE
-            emptyTitleText.text = getString(R.string.empty_title)
-            emptyDescText.text = getString(R.string.empty_desc)
+    private suspend fun getData() {
+        homeViewModel.getTotalTopTierVolume().collect {
+            when (it.status) {
+                LOADING -> if (!binding.swipeRefreshLayout.isRefreshing) {
+                    renderLoading()
+                }
+                SUCCESS -> renderStocks(it.data)
+                ERROR -> renderError()
+            }
         }
-    }
-
-    private fun renderError() {
-        binding.emptyLayout.visibility = VISIBLE
-        binding.loading.visibility = GONE
-    }
-
-    private fun renderLoading() {
-        binding.emptyLayout.visibility = GONE
-        binding.loading.visibility = VISIBLE
     }
 
     override fun onCreateView(
@@ -85,9 +74,16 @@ class HomeFragment : BaseFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.toolbar.inflateMenu(R.menu.menu_home)
+        binding.swipeRefreshLayout.setOnRefreshListener(this)
         setupRecyclerView()
 
         collectCryptoCompares()
+    }
+
+    override fun onRefresh() {
+        viewLifecycleOwner.lifecycleScope.launch {
+            getData()
+        }
     }
 
     private fun setupRecyclerView() {
@@ -108,6 +104,7 @@ class HomeFragment : BaseFragment() {
     }
 
     private fun renderStocks(data: CryptoCompare?) {
+        binding.swipeRefreshLayout.isRefreshing = false
         binding.loading.visibility = GONE
         binding.emptyLayout.visibility = GONE
 
@@ -126,6 +123,30 @@ class HomeFragment : BaseFragment() {
             )
         }
         stockAdapter.notifyDataSetChanged()
+    }
+
+    private fun renderEmpty() {
+        binding.apply {
+            emptyLayout.visibility = VISIBLE
+            emptyTitleText.text = getString(R.string.empty_title)
+            emptyDescText.text = getString(R.string.empty_desc)
+        }
+    }
+
+    private fun renderError() {
+        binding.apply {
+            swipeRefreshLayout.isRefreshing = false
+            emptyLayout.visibility = VISIBLE
+            loading.visibility = GONE
+
+            emptyTitleText.text = getString(R.string.error_title)
+            emptyDescText.text = getString(R.string.error_desc)
+        }
+    }
+
+    private fun renderLoading() {
+        binding.emptyLayout.visibility = GONE
+        binding.loading.visibility = VISIBLE
     }
 
     companion object {

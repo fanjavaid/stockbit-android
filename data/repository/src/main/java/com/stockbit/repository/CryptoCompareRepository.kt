@@ -21,11 +21,15 @@ class CryptoCompareRepositoryImpl(
     ): Flow<Resource<CryptoCompare>> {
         return flow {
             emit(Resource.loading(null))
-            val response = remoteDataSource.fetchTotalTopTierVolume(limit, currencySymbol)
-            if (response.isSuccessful) {
-                emit(Resource.success(response.body()))
-            } else {
-                emit(Resource.error(NetworkErrorException(response.message()), null))
+            try {
+                val response = remoteDataSource.fetchTotalTopTierVolume(limit, currencySymbol)
+                if (response.isSuccessful) {
+                    emit(Resource.success(response.body()))
+                } else {
+                    emit(Resource.error(NetworkErrorException(response.message()), null))
+                }
+            } catch (e: Exception) {
+                emit(Resource.error(e, null))
             }
         }
     }
