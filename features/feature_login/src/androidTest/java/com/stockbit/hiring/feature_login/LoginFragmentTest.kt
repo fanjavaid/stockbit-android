@@ -1,8 +1,13 @@
 package com.stockbit.hiring.feature_login
 
+import android.util.Log
 import androidx.fragment.app.testing.FragmentScenario
 import androidx.fragment.app.testing.launchFragmentInContainer
 import androidx.lifecycle.Lifecycle
+import androidx.navigation.NavController
+import androidx.navigation.NavDirections
+import androidx.navigation.Navigation
+import androidx.navigation.Navigator
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.action.ViewActions.closeSoftKeyboard
@@ -15,25 +20,77 @@ import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.espresso.matcher.ViewMatchers.withText
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.stockbit.hiring.feature_login.ui.LoginFragment
+import com.stockbit.hiring.feature_login.ui.LoginViewModel
+import io.mockk.every
+import io.mockk.mockk
+import io.mockk.verify
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
+import org.koin.android.viewmodel.dsl.viewModel
+import org.koin.core.context.startKoin
+import org.koin.dsl.module
 
 @RunWith(AndroidJUnit4::class)
 class LoginFragmentTest {
 
     private lateinit var scenario: FragmentScenario<LoginFragment>
 
+    private val mockLoginToHomeNavDirections = mockk<NavDirections>()
+    private val testLoginModule = module {
+        factory { mockLoginToHomeNavDirections }
+        viewModel { LoginViewModel(get(), get()) }
+    }
+
     @Before
     fun setup() {
+        startKoin {
+            modules(testAppComponent.plus(testLoginModule))
+        }
+
         scenario = launchFragmentInContainer(themeResId = R.style.AppTheme)
         scenario.moveToState(Lifecycle.State.STARTED)
     }
 
     @Test
-    fun verifyLoginComponentsVisibility() {
+    fun launchFragment_verifyLoginComponentsVisibility() {
         verifyComponentVisibility()
         verifyLoginWithEmptyField()
+    }
+
+    @Test
+    fun launchFragment_doLogin_verifyNavigateToHome() {
+        // Given
+        val mockNavController = mockk<NavController>()
+        every {
+            mockNavController.navigate(any(), any<Navigator.Extras>())
+        } returns Unit
+
+        scenario.onFragment { fragment ->
+            Navigation.setViewNavController(fragment.requireView(), mockNavController)
+        }
+
+        Log.d("HASHCODE", "Test = ${mockNavController.hashCode()}")
+        println("Test = ${mockNavController.hashCode()}")
+
+        // When
+        val usernameEmailFieldMatcher = withId(R.id.username_email_edit_text)
+        val passwordFieldMatcher = withId(R.id.password_edit_text)
+        val loginButtonMatcher = withText("Login")
+        onView(usernameEmailFieldMatcher).perform(
+            replaceText("dummy"),
+            closeSoftKeyboard()
+        )
+        onView(passwordFieldMatcher).perform(
+            replaceText("123"),
+            closeSoftKeyboard()
+        )
+        onView(loginButtonMatcher).perform(click())
+
+        // Then
+        verify {
+            mockNavController.navigate(mockLoginToHomeNavDirections, any<Navigator.Extras>())
+        }
     }
 
     private fun verifyLoginWithEmptyField() {

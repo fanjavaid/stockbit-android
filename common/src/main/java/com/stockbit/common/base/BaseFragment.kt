@@ -12,7 +12,7 @@ import com.stockbit.common.extension.setupSnackbar
 import com.stockbit.common.utils.Event
 import com.stockbit.navigation.NavigationCommand
 
-abstract class BaseFragment: Fragment() {
+abstract class BaseFragment : Fragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
@@ -29,14 +29,17 @@ abstract class BaseFragment: Fragment() {
      * When this [LiveData] is updated, [Fragment] will navigate to its destination
      */
     private fun observeNavigation(viewModel: BaseViewModel) {
-        viewModel.navigation.observe(viewLifecycleOwner, Observer {
-            it?.getContentIfNotHandled()?.let { command ->
-                when (command) {
-                    is NavigationCommand.To -> findNavController().navigate(command.directions, getExtras())
-                    is NavigationCommand.Back -> findNavController().navigateUp()
+        viewModel.navigation.observe(
+            viewLifecycleOwner,
+            Observer {
+                it?.getContentIfNotHandled()?.let { command ->
+                    when (command) {
+                        is NavigationCommand.To -> findNavController().navigate(command.directions, getExtras())
+                        is NavigationCommand.Back -> findNavController().navigateUp()
+                    }
                 }
             }
-        })
+        )
     }
 
     /**

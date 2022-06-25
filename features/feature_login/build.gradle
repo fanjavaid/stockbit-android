@@ -30,8 +30,11 @@ dependencies {
     implementation AndroidLibraries.navigation
     implementation AndroidLibraries.navigationFrag
     // TEST
-    implementation TestLibraries.androidTestRunner
-    implementation TestLibraries.espresso
-    implementation TestLibraries.fragmentNav
-    implementation TestLibraries.junit
+    testImplementation TestLibraries.junit
+    androidTestImplementation TestLibraries.junit
+    androidTestImplementation TestLibraries.androidTestRunner
+    androidTestImplementation TestLibraries.espresso
+    androidTestImplementation TestLibraries.mockk
+    androidTestImplementation TestLibraries.mockkAndroid
+    androidTestImplementation TestLibraries.fragmentNav
 }

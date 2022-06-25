@@ -7,7 +7,7 @@ import androidx.navigation.NavDirections
 import com.stockbit.common.utils.Event
 import com.stockbit.navigation.NavigationCommand
 
-abstract class BaseViewModel: ViewModel() {
+abstract class BaseViewModel : ViewModel() {
 
     // FOR ERROR HANDLER
     protected val _snackbarError = MutableLiveData<Event<Int>>()
@@ -20,7 +20,7 @@ abstract class BaseViewModel: ViewModel() {
     /**
      * Convenient method to handle navigation from a [ViewModel]
      */
-     fun navigate(directions: NavDirections) {
+    fun navigate(directions: NavDirections) {
         _navigation.value = Event(NavigationCommand.To(directions))
     }
 }

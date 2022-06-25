@@ -1,6 +1,5 @@
 package com.stockbit.hiring.feature_login.ui
 
-import android.os.Bundle
 import androidx.navigation.NavDirections
 import com.stockbit.common.base.BaseViewModel
 import com.stockbit.common.utils.Event
@@ -8,7 +7,10 @@ import com.stockbit.hiring.feature_login.R
 import com.stockbit.model.User
 import com.stockbit.repository.UserRepository
 
-class LoginViewModel(private val userRepository: UserRepository) : BaseViewModel() {
+class LoginViewModel(
+    private val userRepository: UserRepository,
+    private val navDirections: NavDirections
+) : BaseViewModel() {
 
     fun login(user: User) {
         val validateResult = validate(user)
@@ -16,14 +18,7 @@ class LoginViewModel(private val userRepository: UserRepository) : BaseViewModel
             _snackbarError.value = Event(validateResult)
             return
         }
-        navigate(getHomeNavDirections())
-    }
-
-    private fun getHomeNavDirections(): NavDirections = object : NavDirections {
-        override fun getActionId(): Int {
-            return R.id.action_loginFragment_to_homeFragment
-        }
-        override fun getArguments(): Bundle = Bundle()
+        navigate(navDirections)
     }
 
     private fun validate(user: User): Int? {
