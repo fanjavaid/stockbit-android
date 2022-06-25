@@ -10,10 +10,10 @@ dependencies {
     // ANDROID
     implementation KotlinLibraries.kotlinCoroutineCore
     implementation AndroidLibraries.kotlinCoroutineAndroid
-    implementation AndroidLibraries.lifecycleExtensions
     // KOIN
     implementation Libraries.koin
     implementation Libraries.koinViewModel
+    implementation Libraries.retrofit
     // TESTS
     testImplementation TestLibraries.junit
     testImplementation TestLibraries.mockk

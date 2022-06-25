@@ -1,7 +1,7 @@
 package com.stockbit.remote.di
 
-import com.stockbit.remote.ExampleDatasource
-import com.stockbit.remote.ExampleService
+import com.stockbit.remote.CryptoCompareDataSource
+import com.stockbit.remote.CryptoCompareService
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -26,7 +26,7 @@ fun createRemoteModule(baseUrl: String) = module {
             .build()
     }
 
-    factory{ get<Retrofit>().create(ExampleService::class.java) }
+    factory { get<Retrofit>().create(CryptoCompareService::class.java) }
 
-    factory { ExampleDatasource(get()) }
+    factory { CryptoCompareDataSource(get()) }
 }
