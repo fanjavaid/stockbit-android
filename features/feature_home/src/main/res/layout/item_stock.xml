@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingHorizontal="@dimen/space_16"
+        android:paddingVertical="@dimen/space_8">
+
+        <TextView
+            android:id="@+id/stock_title_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="AALI"
+            android:textAppearance="@style/TextAppearance.MaterialComponents.Body2"
+            android:textColor="@color/colorPrimaryDark"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/stock_status_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@id/stock_title_text"
+            android:layout_alignBottom="@id/stock_title_text"
+            android:layout_marginStart="@dimen/space_8"
+            android:layout_toEndOf="@id/stock_title_text"
+            android:background="@drawable/badge_bordered_danger"
+            android:paddingHorizontal="@dimen/space_4"
+            android:text="Suspended"
+            android:textAppearance="@style/TextAppearance.MaterialComponents.Caption"
+            android:textColor="@color/colorDanger"
+            android:visibility="gone"
+            tools:visibility="visible" />
+
+        <TextView
+            android:id="@+id/stock_description_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/stock_title_text"
+            android:layout_marginTop="@dimen/space_4"
+            android:text="Astra Agro Lestari Tbk."
+            android:textAppearance="@style/TextAppearance.MaterialComponents.Caption" />
+
+        <TextView
+            android:id="@+id/stock_price_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:text="9,050"
+            android:textColor="@color/colorPrimaryDark"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/stock_percentage_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/stock_price_text"
+            android:layout_alignTop="@id/stock_description_text"
+            android:layout_alignParentEnd="true"
+            android:text="+200(+2,26%)"
+            android:textAppearance="@style/TextAppearance.MaterialComponents.Caption"
+            android:textColor="@color/colorAccent" />
+    </RelativeLayout>
+</layout>

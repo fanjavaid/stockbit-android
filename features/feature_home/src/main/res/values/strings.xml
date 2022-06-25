@@ -2,4 +2,9 @@
 <resources>
     <string name="all_watchlist">All Watchlist</string>
     <string name="add_symbol">Add Symbol</string>
+    <string name="watchlist">Watchlist</string>
+    <string name="stream">Stream</string>
+    <string name="search">Search</string>
+    <string name="chat">Chat</string>
+    <string name="portfolio">Portfolio</string>
 </resources>
