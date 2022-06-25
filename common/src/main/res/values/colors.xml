@@ -5,4 +5,6 @@
     <color name="colorAccent">#4DAB6C</color>
     <color name="colorLightGray">#BBBBBB</color>
     <color name="colorLighterGray">#DEDEDE</color>
+    <color name="colorLighterGray02">#F5F5F5</color>
+    <color name="colorDanger">#DB5247</color>
 </resources>
