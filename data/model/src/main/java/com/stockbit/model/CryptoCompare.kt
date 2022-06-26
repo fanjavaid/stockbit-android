@@ -14,10 +14,10 @@ data class CryptoCompare(
     var MetaData: MetaData? = MetaData(),
 
     @SerializedName("SponsoredData")
-    var SponsoredData: ArrayList<String> = arrayListOf(),
+    var SponsoredData: List<String> = listOf(),
 
     @SerializedName("Data")
-    var Data: ArrayList<Data> = arrayListOf(),
+    var Data: List<Data> = listOf(),
 
     @SerializedName("RateLimit")
     var RateLimit: RateLimit? = RateLimit(),
