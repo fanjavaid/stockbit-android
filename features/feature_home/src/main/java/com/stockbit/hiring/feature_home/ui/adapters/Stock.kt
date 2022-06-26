@@ -5,6 +5,7 @@ data class Stock(
     val name: String,
     val desc: String,
     val price: String,
+    val changePrice: String,
     val percentage: String,
     val status: StockStatus = StockStatus.Available
 )

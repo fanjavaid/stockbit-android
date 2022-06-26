@@ -147,7 +147,8 @@ class HomeFragment : BaseFragment(), SwipeRefreshLayout.OnRefreshListener {
                 id = it.coinInfo.id,
                 name = it.coinInfo.name.orEmpty(),
                 desc = it.coinInfo.fullName.orEmpty(),
-                price = it.display.usdCurrency?.changeHour.orEmpty(),
+                price = it.display.usdCurrency?.price.orEmpty(),
+                changePrice = it.display.usdCurrency?.changeHour.orEmpty(),
                 percentage = it.display.usdCurrency?.changePercentageHour.orEmpty()
             )
         }

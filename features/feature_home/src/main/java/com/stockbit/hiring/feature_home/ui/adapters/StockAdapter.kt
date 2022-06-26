@@ -48,7 +48,7 @@ class StockAdapter : RecyclerView.Adapter<StockAdapter.ViewHolder>() {
                     stockTitleText.text = stock.name
                     stockDescriptionText.text = stock.desc
                     stockPriceText.text = stock.price
-                    stockPercentageText.text = stock.percentage
+                    stockPercentageText.text = "${stock.changePrice}($stockPercentage%)"
                     stockPercentageText.setTextColor(
                         when {
                             stockPercentage < 0.0 -> getColor(context, R.color.colorDanger)
