@@ -43,7 +43,9 @@ class CryptoCompareRepositoryImpl(
             } else {
                 cache(
                     onCache = {
-                        emit(Resource.success(it.toResponseBody()))
+                        if (page == 0) {
+                            emit(Resource.success(it.toResponseBody()))
+                        } else emit(Resource.success(null))
                     },
                     onEmptyCache = {
                         emit(Resource.error(NetworkErrorException(response.message()), null))
@@ -53,7 +55,9 @@ class CryptoCompareRepositoryImpl(
         }.catch { e ->
             cache(
                 onCache = {
-                    emit(Resource.success(it.toResponseBody()))
+                    if (page == 0) {
+                        emit(Resource.success(it.toResponseBody()))
+                    } else emit(Resource.success(null))
                 },
                 onEmptyCache = {
                     emit(Resource.error(e, null))

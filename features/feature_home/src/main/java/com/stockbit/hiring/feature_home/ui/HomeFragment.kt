@@ -166,10 +166,12 @@ class HomeFragment : BaseFragment(), SwipeRefreshLayout.OnRefreshListener {
     }
 
     private fun renderEmpty() {
-        binding.apply {
-            emptyLayout.visibility = VISIBLE
-            emptyTitleText.text = getString(R.string.empty_title)
-            emptyDescText.text = getString(R.string.empty_desc)
+        if (page == 0) { // Show info only first page empty
+            binding.apply {
+                emptyLayout.visibility = VISIBLE
+                emptyTitleText.text = getString(R.string.empty_title)
+                emptyDescText.text = getString(R.string.empty_desc)
+            }
         }
     }
 
