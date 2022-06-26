@@ -70,9 +70,6 @@ class LoginFragmentTest {
             Navigation.setViewNavController(fragment.requireView(), mockNavController)
         }
 
-        Log.d("HASHCODE", "Test = ${mockNavController.hashCode()}")
-        println("Test = ${mockNavController.hashCode()}")
-
         // When
         val usernameEmailFieldMatcher = withId(R.id.username_email_edit_text)
         val passwordFieldMatcher = withId(R.id.password_edit_text)

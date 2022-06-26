@@ -24,10 +24,10 @@ class FakeCryptoCompareRepository : CryptoCompareRepository {
     fun getMockData(): CryptoCompare {
         val data = List(MAX_ITEM) {
             Data(
-                CoinInfo(Id = "$it", Name = "Test-$it", FullName = "Test Desc-$it")
+                CoinInfo(id = "$it", name = "Test-$it", fullName = "Test Desc-$it")
             )
         }
-        return CryptoCompare(Data = data)
+        return CryptoCompare(data = data)
     }
 
     companion object {

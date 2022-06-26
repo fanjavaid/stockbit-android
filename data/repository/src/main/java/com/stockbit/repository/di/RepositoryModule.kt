@@ -10,6 +10,6 @@ import org.koin.dsl.module
 
 val repositoryModule = module {
     factory { AppDispatchers(Dispatchers.Main, Dispatchers.IO) }
-    factory<CryptoCompareRepository> { CryptoCompareRepositoryImpl(get()) }
+    factory<CryptoCompareRepository> { CryptoCompareRepositoryImpl(get(), get(), get()) }
     factory<UserRepository> { InMemoryUserRepository(get()) }
 }

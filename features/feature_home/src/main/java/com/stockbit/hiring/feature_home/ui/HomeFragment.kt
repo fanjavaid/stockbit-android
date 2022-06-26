@@ -142,13 +142,13 @@ class HomeFragment : BaseFragment(), SwipeRefreshLayout.OnRefreshListener {
             isLoadMore = false
         }
 
-        val items = data.Data.map {
+        val items = data.data.map {
             Stock(
-                id = it.CoinInfo.Id,
-                name = it.CoinInfo.Name.orEmpty(),
-                desc = it.CoinInfo.FullName.orEmpty(),
-                price = it.DISPLAY.USD?.CHANGEHOUR.orEmpty(),
-                percentage = it.DISPLAY.USD?.CHANGEPCTHOUR.orEmpty()
+                id = it.coinInfo.id,
+                name = it.coinInfo.name.orEmpty(),
+                desc = it.coinInfo.fullName.orEmpty(),
+                price = it.display.usdCurrency?.changeHour.orEmpty(),
+                percentage = it.display.usdCurrency?.changePercentageHour.orEmpty()
             )
         }
 
